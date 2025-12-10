@@ -9,25 +9,31 @@ class Safe:
         if self.dial_position == 0:
             self.no_of_position_0 += 1
 
-    def _check_dial(self):
+    def _check_dial(self, prev_position):
         if self.dial_position >= 100:
+            if self.dial_position > 100:
+                self.no_of_position_0 += 1
+                print("klikam bo powyzej 100")
             self.dial_position = self.dial_position - 100
-            self.no_of_position_0 += 1
             print("przeskoczylo bo wieksze od 100!")
         if self.dial_position < 0:
             self.dial_position = 100 + self.dial_position
-            self.no_of_position_0 += 1
+            if prev_position != 0:
+                self.no_of_position_0 += 1
+            print("klikam bo ponizej 100")
             print("przeskoczylo bo mniejsze od 100!")
         if self.dial_position >= 100 or self.dial_position < 0:
-            self._check_dial()
+            prev_position = 1
+            self._check_dial(prev_position)
 
     def move_dial(self,direction,clicks):
+        prev_position = self.dial_position
         if direction == "L":
             self.dial_position -= clicks
         elif direction == "R":
             self.dial_position += clicks
-        self._check_dial()
-        # self._check_pos_0()
+        self._check_dial(prev_position)
+        self._check_pos_0()
         
 def count_0_positions(filepath: str):
     safe=Safe()
